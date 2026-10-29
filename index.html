@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial;
+  background: #f0eaff;
+  text-align: center;
+  padding: 20px;
+}
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  margin: 20px auto;
+  max-width: 350px;
+}
+button {
+  background: #7654c8;
+  color: white;
+  border: none;
+  padding: 12px;
+  margin: 5px;
+  border-radius: 8px;
+}
+input {
+  padding: 10px;
+  margin: 5px;
+  width: 85%;
+}
+</style>
+</head>
+<body>
+<h2>📚 Flashcard Quiz</h2>
+
+<div class="card">
+  <h3 id="question">What is CPU?</h3>
+  <p id="answer" hidden>
+    Central Processing Unit
+  </p>
+  <button onclick="showAnswer()">Show Answer</button>
+</div>
+
+<button onclick="move(-1)">Previous</button>
+<button onclick="move(1)">Next</button>
+
+<h3>Add Flashcard</h3>
+<input id="q" placeholder="Enter question">
+<input id="a" placeholder="Enter answer"><br>
+<button onclick="addCard()">Add Card</button>
+<button onclick="editCard()">Edit Flashcard</button>
+<button onclick="deleteCard()">Delete Current</button>
+
+<script>
+let cards = [
+  {q:"What is CPU?", a:"Central Processing Unit"},
+  {q:"What is RAM?", a:"Random Access Memory"},
+  {q:"What is HTML?", a:"HyperText Markup Language"}
+];
+let index = 0;
+
+function display() {
+  document.getElementById("question").innerText =
+    cards[index].q;
+  document.getElementById("answer").innerText =
+    cards[index].a;
+  document.getElementById("answer").hidden = true;
+}
+function showAnswer() {
+  document.getElementById("answer").hidden = false;
+}
+function move(step) {
+  index = (index + step + cards.length) % cards.length;
+  display();
+}
+function addCard() {
+  let q = document.getElementById("q").value.trim();
+  let a = document.getElementById("a").value.trim();
+  if (!q || !a) return alert("Enter both fields");
+  cards.push({q:q, a:a});
+  index = cards.length - 1;
+  document.getElementById("q").value = "";
+  document.getElementById("a").value = "";
+  display();
+}
+function editCard() {
+  let q = prompt("Enter the new question:", cards[index].q);
+  if (q === null || q.trim() === "") return;
+
+  let a = prompt("Enter the new answer:", cards[index].a);
+  if (a === null || a.trim() === "") return;
+
+  cards[index] = { q: q, a: a };
+  display();
+  alert("Flashcard updated!");
+}
+function deleteCard() {
+  cards.splice(index, 1);
+  if (cards.length === 0) {
+    cards.push({q:"No cards left", a:"Add a new card"});
+  }
+  index = Math.min(index, cards.length - 1);
+  display();
+}
+display();
+</script>
+</body>
+</html>
